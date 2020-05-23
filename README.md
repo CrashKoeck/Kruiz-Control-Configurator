@@ -16,7 +16,8 @@
 ## How To Use
 - Download the EXE file and place in the same folder as Kruiz Control index.html
 - Run the EXE
-- Do the things
+- Fill in the blanks
+- Have a great show!
 
 ***
 
@@ -25,6 +26,11 @@
 - Dropdown menus for all Kruiz Control actions
 - Option to run Kruiz Control within Kruiz Control Configurator
 - Option to check for and install updates
+
+***
+
+## Support
+- Be sure to join the <a href="https://discord.gg/zyS2jbJ">CrashPad Discord</a> for direct support
 
 ***
 
