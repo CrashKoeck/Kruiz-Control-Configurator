@@ -10,3 +10,8 @@
   <a href="https://patreon.com/Crashkoeck">Patreon</a> |
   <a href="https://discord.gg/zyS2jbJ">Discord</a>
 </b></i></p>
+
+## How to use
+- Download the EXE file and place in the same folder as Kruiz Control index.html
+- Run the EXE
+- Do the things
