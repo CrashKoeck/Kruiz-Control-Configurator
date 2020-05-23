@@ -14,7 +14,7 @@
 ***
 
 ## How To Use
-- <a href="https://github.com/CrashKoeck/Kruiz-Control-Configurator/releases">Download Kruiz-Control-Configurator.exe</a> and place it in the same folder as Kruiz Control index.html
+- <a href="https://github.com/CrashKoeck/Kruiz-Control-Configurator/releases">Download Kruiz-Control-Configurator.exe</a> and place it in your Kruiz Control folder (the same folder as index.html)
 - Run Kruiz-Control-Configurator.exe
 - Fill in the blanks
 - Have a great show!
