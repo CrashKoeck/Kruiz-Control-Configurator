@@ -11,7 +11,17 @@
   <a href="https://discord.gg/zyS2jbJ">Discord</a>
 </b></i></p>
 
-## How to use
+***
+
+## How To Use
 - Download the EXE file and place in the same folder as Kruiz Control index.html
 - Run the EXE
 - Do the things
+
+***
+
+## Future Plans
+- Make Kruiz Control Configurator able to edit triggers.txt, filetriggers.txt, and add new file triggers
+- Dropdown menus for all Kruiz Control actions
+- Option to run Kruiz Control within Kruiz Control Configurator
+- Option to check for and install updates
