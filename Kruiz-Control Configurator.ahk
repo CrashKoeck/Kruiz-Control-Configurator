@@ -1,6 +1,7 @@
 ﻿; Kruiz Control Configurator by CrashKoeck
 ; Crash@CrashKoeck.com
 ; Copyright 2020 CrashKoeck
+Version := "1.0.1"
 
 #SingleInstance Force
 #NoEnv
@@ -120,7 +121,7 @@ return
 ;; --------------------------------
 
 AboutBox:
-	MsgBox,32, Kruiz Control Configurator by CrashKoeck, % "Kruiz Control Configurator`n`nVersion: 1.0.0`nCreated by CrashKoeck`nCrashKoeck.com`n`nKruiz Control created by Kruiser8`n`nIf you are having issues with this app, please join the CrashPad Discord"
+	MsgBox,32, Kruiz Control Configurator by CrashKoeck, % "Kruiz Control Configurator for Kruiz Control 1.2.0`n`nVersion: " . Version . "`nCreated by CrashKoeck`nCrashKoeck.com`n`nKruiz Control created by Kruiser8`n`nIf you are having issues with this app, please join the CrashPad Discord"
 return
 
 
