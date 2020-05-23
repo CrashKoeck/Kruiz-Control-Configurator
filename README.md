@@ -1,6 +1,6 @@
 # Kruiz Control Configurator
 
-<p align="center">Kruiz Control Configurator is a simple frontend for <a href="https://github.com/Kruiser8/Kruiz-Control" target="_blank">Kruiz Control</a> which allows easy setting and updating of settings files.</p>
+<p align="center">Kruiz Control Configurator is a simple frontend for <a href="https://github.com/Kruiser8/Kruiz-Control">Kruiz Control</a> which allows easy setting and updating of settings files.</p>
 
 <p align="center"><i><b>
   Crash on the interwebs<br>
@@ -25,3 +25,8 @@
 - Dropdown menus for all Kruiz Control actions
 - Option to run Kruiz Control within Kruiz Control Configurator
 - Option to check for and install updates
+
+***
+
+## Credits
+- <a href="https://github.com/Kruiser8/Kruiz-Control">Kruiz Control by Kruizer8</a>
