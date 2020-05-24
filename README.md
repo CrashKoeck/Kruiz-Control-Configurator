@@ -35,4 +35,4 @@
 ***
 
 ## Credits
-- <a href="https://github.com/Kruiser8/Kruiz-Control">Kruiz Control by Kruizer8</a>
+- <a href="https://github.com/Kruiser8/Kruiz-Control">Kruiz Control by Kruiser8</a>
