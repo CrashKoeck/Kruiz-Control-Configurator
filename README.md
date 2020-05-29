@@ -2,7 +2,7 @@
 
 <p align="center">Kruiz Control Configurator is a simple frontend for <a href="https://github.com/Kruiser8/Kruiz-Control">Kruiz Control</a> which allows easy setting and updating of settings files.</p>
 
-<p align="center"><img src="https://user-images.githubusercontent.com/51434502/82869996-0f9e8300-9ee4-11ea-9a7e-e5a2ad1c7187.png"></p>
+<p align="center"><img src="https://user-images.githubusercontent.com/51434502/83311410-fcc9ce00-a1c3-11ea-80ce-9165bdba5265.png"></p>
 
 <p align="center"><i><b>
   Crash on the interwebs<br>
