@@ -1,12 +1,44 @@
 ﻿; Kruiz Control Configurator by CrashKoeck
 ; Crash@CrashKoeck.com
 ; Copyright 2020 CrashKoeck
-Version := "1.0.1"
+Version := "1.2.0"
+BuiltForKCVersion := "1.2.1"
 
 #SingleInstance Force
 #NoEnv
 SetWorkingDir %A_ScriptDir%
 SetBatchLines -1
+
+
+;; --------------------------------
+;; Get latest version of KC on GitHub
+;; --------------------------------
+
+vCheck := ComObjCreate("WinHttp.WinHttpRequest.5.1")
+vCheck.Open("GET","https://api.github.com/repos/Kruiser8/Kruiz-Control/releases/latest")
+vCheck.Send()
+vCheckResponse := vCheck.ResponseText
+vCheckArray := StrSplit(vCheckResponse, "tag_name")
+vCheckArray2 := StrSplit(vCheckArray[2], ",")
+vCheckArray3 := StrSplit(vCheckArray2[1], "v")
+currentKCVersion := StrReplace(vCheckArray3[2], """", "")
+
+
+;; --------------------------------
+;; Get version of local KC
+;; --------------------------------
+
+currentLocalKCVersion := "Could not determine local version"
+KUpdateAvailable := ""
+if (FileExist("version.txt")){
+	FileReadLine, readLocalVersion, version.txt, 1
+	if(readLocalVersion != ""){
+		currentLocalKCVersion := readLocalVersion
+		if(readLocalVersion != currentKCVersion){
+			KCUpdateAvailable := "Kruiz Control Update Available`nCheck the About Tab"
+		}
+	}
+}
 
 
 ;; --------------------------------
@@ -36,75 +68,76 @@ FileInstall, icon.ico, %a_temp%/icon.ico
 
 Menu Tray, Icon, %a_temp%/icon.ico
 
-Gui New, -MaximizeBox +OwnDialogs -Caption
+Gui New, -MaximizeBox +OwnDialogs -SysMenu
 
-Gui Color, 0x404040
+;Gui Color, 0x121212
 
-Gui Add, Picture, x195 y10 w250 h141, %a_temp%/logo.png
+Gui Add, Picture, x231 y10 w178 h100, %a_temp%/logo.png
+Gui, Font, s15
+Gui Add, Text, x170 y110 w300 h25 +0x200 +Center, Configurator by CrashKoeck
+Gui, Font
 
-Gui Add, Button, x25 y25 w140 h23 gVisitKCGitHub, Kruiz Control on GitHub
-Gui Add, Button, x25 y55 w140 h23 gKCDiscord, Kruiz Control Discord
+Gui Add, Text, x10 y10 w200 h30 cFF0000, %KCUpdateAvailable%
 
-Gui Add, Button, x475 y25 w140 h23 gAboutBox, About
-Gui Add, Button, x475 y55 w140 h23 gVisitCrashGitHub, CrashKoeck on GitHub
-Gui Add, Button, x475 y85 w140 h23 gCrashPad, CrashPad Discord
+Gui Add, Button, x600 y10 w30 h30 gExitApp, X
 
-Gui Add, Text, x-10 y155 w660 h2 +0x10
 
-Gui Add, Text, x10 y175 w305 h21 +0x200 +Right cFFFFFF, Channel to read Channel Points from: 
-Gui Add, Edit, x320 y175 w305 h21 vFieldChannelPoints gSaveEnable, %savedChannelPoints%
+;; --------------------------------
+;; TABS - Inner Dimensions = x6 y166 w628 h428
+;; --------------------------------
 
-Gui Add, Text, x10 y200 w301 h23 +0x200 +Right cFFFFFF, Channel to connect to for chat:
-Gui Add, Edit, x320 y200 w305 h21 vFieldChat gSaveEnable, %savedChat%
+Gui Add, Tab3, x5 y145 w632 h451, Configuration|Trigger Creator|About
+	
+	Gui Add, Text, x16 y176 w299 h21 +0x200 +Right, Channel to read Channel Points from: 
+	Gui Add, Edit, x320 y176 w304 h21 vFieldChannelPoints gSaveEnable, %savedChannelPoints%
 
-Gui Add, Text, x10 y225 w305 h23 +0x200 +Right cFFFFFF, OAUTH Token for account sending messages:
-Gui Add, Edit, x320 y225 w305 h21 vFieldOAUTH gSaveEnable, %savedOAUTH%
-Gui Add, Button, x320 y250 w150 h21 gGetOAUTH, Get OAUTH Token
-Gui Add, Button, x480 y250 w21 h21 gGetOAUTHHelp, ?
+	Gui Add, Text, x16 y201 w299 h23 +0x200 +Right, Channel to connect to for chat:
+	Gui Add, Edit, x320 y201 w304 h21 vFieldChat gSaveEnable, %savedChat%
 
-Gui Add, Text, x10 y300 w305 h23 +0x200 +Right cFFFFFF, OBS Websocket Address:
-Gui Add, Edit, x320 y300 w305 h21 vFieldOBSAddress gSaveEnable, %savedOBSAddress%
+	Gui Add, Text, x16 y226 w299 h23 +0x200 +Right, OAUTH Token for account sending messages:
+	Gui Add, Edit, x320 y226 w304 h21 vFieldOAUTH gSaveEnable +Password, %savedOAUTH%
+	Gui Add, Button, x319 y251 w150 h21 gGetOAUTH, Get OAUTH Token
+	Gui Add, Button, x474 y251 w21 h21 gGetOAUTHHelp, ?
+	Gui Add, Button, x500 y251 w125 h21 gShowOAUTH, Show Token
 
-Gui Add, Text, x10 y325 w305 h23 +0x200 +Right cFFFFFF, OBS Websocket Password:
-Gui Add, Edit, x320 y325 w305 h21 vFieldOBSPassword gSaveEnable, %savedOBSPassword%
-Gui Add, Button, x320 y350 w150 h21 gGetOBSwebsocket, Get OBS websocket Plugin
-Gui Add, Button, x480 y350 w21 h21 gGetOBSwebsocketHelp, ?
+	Gui Add, Text, x16 y301 w299 h23 +0x200 +Right, OBS Websocket Address:
+	Gui Add, Edit, x320 y301 w304 h21 vFieldOBSAddress gSaveEnable, %savedOBSAddress%
 
-Gui Add, Text, x10 y400 w305 h23 +0x200 +Right cFFFFFF, StreamElements JWT Token:
-Gui Add, Edit, x320 y400 w305 h21 vFieldSE gSaveEnable, %savedSE%
-Gui Add, Button, x320 y425 w150 h21 gGetjwt, Get JWT Token
-Gui Add, Button, x480 y425 w21 h21 gGetjwtHelp, ?
+	Gui Add, Text, x16 y326 w299 h23 +0x200 +Right, OBS Websocket Password:
+	Gui Add, Edit, x320 y326 w304 h21 vFieldOBSPassword gSaveEnable +Password, %savedOBSPassword%
+	Gui Add, Button, x319 y351 w150 h21 gGetOBSwebsocket, Get OBS websocket Plugin
+	Gui Add, Button, x474 y351 w21 h21 gGetOBSwebsocketHelp, ?
+	Gui Add, Button, x500 y351 w125 h21 gShowOBSwebsocket, Show Password
 
-Gui Add, Text, x10 y475 w305 h23 +0x200 +Right cFFFFFF, Streamlabs socketAPI Token:
-Gui Add, Edit, x320 y475 w305 h21 vFieldSL gSaveEnable, %savedSL%
-Gui Add, Button, x320 y500 w150 h21 gGetsocketAPI, Get socketAPI Token
-Gui Add, Button, x480 y500 w21 h21 gGetsocketAPIHelp, ?
+	Gui Add, Text, x16 y401 w299 h23 +0x200 +Right, StreamElements JWT Token:
+	Gui Add, Edit, x320 y401 w304 h21 vFieldSE gSaveEnable +Password, %savedSE%
+	Gui Add, Button, x319 y426 w150 h21 gGetjwt, Get JWT Token
+	Gui Add, Button, x474 y426 w21 h21 gGetjwtHelp, ?
+	Gui Add, Button, x500 y426 w125 h21 gShowjwt, Show JWT Token
 
-Gui Add, Button, x25 y580 w140 h30 gResetDefaults, Reset Defaults
-Gui Add, Button, x175 y580 w140 h30 vReloadButton gReloadSettings +Disabled, Reload Previous Settings
-Gui Add, Button, x325 y580 w140 h30 vSaveButton gSaveSettings +Disabled, Save Settings
-Gui Add, Button, x475 y580 w140 h30 gExitApp, Exit
+	Gui Add, Text, x16 y476 w299 h23 +0x200 +Right, Streamlabs socketAPI Token:
+	Gui Add, Edit, x320 y476 w304 h21 vFieldSL gSaveEnable +Password, %savedSL%
+	Gui Add, Button, x319 y501 w150 h21 gGetsocketAPI, Get socketAPI Token
+	Gui Add, Button, x474 y501 w21 h21 gGetsocketAPIHelp, ?
+	Gui Add, Button, x500 y501 w125 h21 gShowsocketAPI, Show socketAPI Token
 
-Gui Show, w640 h625, Kruiz Control Configurator
+	Gui Add, Button, x100 y554 w140 h30 gResetDefaults, Reset Defaults
+	Gui Add, Button, x250 y554 w140 h30 vReloadButton gReloadSettings +Disabled, Reload Previous Settings
+	Gui Add, Button, x400 y554 w140 h30 vSaveButton gSaveSettings +Disabled, Save Settings
+
+Gui Tab, 2
+
+	Gui Add, Text, x10 y356 w620 h23 +0x200 +Center, Coming Soon
+
+Gui Tab, 3
+
+	Gui Add, Link, x16 y176 w608 h418, Kruiz Control Configurator Version: %Version%`nCreated by CrashKoeck`n<a href="https://crashkoeck.com">CrashKoeck.com</a>`n<a href="https://raw.githubusercontent.com/CrashKoeck/Kruiz-Control-Configurator/master/LICENSE">License</a>`n`nCurrent Local Version of Kruiz Control: %currentLocalKCVersion%`nLatest Version of Kruiz Control on <A href="https://github.com/Kruiser8/Kruiz-Control/releases">GitHub</a>: %currentKCVersion%`n`nKruiz Control created by Kruiser8`n`nIf you are having issues with this app, please join the <a href="https://discord.gg/zyS2jbJ">CrashPad Discord</a> for support`n`n- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -`n`n<a href="https://github.com/Kruiser8/Kruiz-Control/blob/master/js/Documentation.md#kruiz-control-documentation">Kruiz Control Documentation</a>`n`n<a href="https://discord.gg/wU3ZK3Q">Kruiz Control Support Discord</a>`n`n<a href="https://twitter.com/kruiser8">Kruiser8 on Twitter</a>`n`n<a href="https://twitch.tv/kruiser8">Kruiser8 on Twitch</a>`n`n- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -`n`n<a href="https://github.com/crashkoeck">CrashKoeck on GitHub</a>`n`n<a href="https://twitter.com/CrashKoeck">CrashKoeck on Twitter</a>`n`n<a href="https://twitch.tv/CrashKoeck">CrashKoeck on Twitch</a>
+	
+
+Gui Tab
+
+Gui Show, w640 h600, Kruiz Control Configurator
 Return
-
-
-;; --------------------------------
-;; Visit Kruiz Control GitHub Page
-;; --------------------------------
-
-VisitKCGitHub:
-	Run, https://github.com/Kruiser8/Kruiz-Control/blob/master/settings/Settings.md
-return
-
-
-;; --------------------------------
-;; Visit Crash GitHub Page
-;; --------------------------------
-
-VisitCrashGitHub:
-	Run, https://github.com/CrashKoeck/Kruiz-Control-Configurator
-return
 
 
 ;; --------------------------------
@@ -113,33 +146,6 @@ return
 
 SaveEnable:
 	GuiControl,Enable, SaveButton
-return
-
-
-;; --------------------------------
-;; Action when the About button is pressed
-;; --------------------------------
-
-AboutBox:
-	MsgBox,32, Kruiz Control Configurator by CrashKoeck, % "Kruiz Control Configurator for Kruiz Control 1.2.0`n`nVersion: " . Version . "`nCreated by CrashKoeck`nCrashKoeck.com`n`nKruiz Control created by Kruiser8`n`nIf you are having issues with this app, please join the CrashPad Discord"
-return
-
-
-;; --------------------------------
-;; Action when the CrashPad Discord button is pressed
-;; --------------------------------
-
-CrashPad:
-	Run, https://discord.gg/zyS2jbJ
-return
-
-
-;; --------------------------------
-;; Action when the Kruiz Control Discord button is pressed
-;; --------------------------------
-
-KCDiscord:
-	Run, https://discord.gg/wU3ZK3Q
 return
 
 
@@ -162,6 +168,17 @@ return
 
 
 ;; --------------------------------
+;; Action when the Show OAUTH button is pressed
+;; --------------------------------
+
+ShowOAUTH:
+	Gui, Submit, NoHide
+	GuiControlGet, FieldOAUTH
+	MsgBox,32,Twitch OAUTH Token, %FieldOAUTH%
+return
+
+
+;; --------------------------------
 ;; Action when the OBS websocket button is pressed
 ;; --------------------------------
 
@@ -176,6 +193,17 @@ return
 
 GetOBSwebsocketHelp:
 	MsgBox,64,OBS websocket Info, OBS websocket plugin allows different services to connect to and communicate with OBS. Follow the instructions on the OBS websocket page to install and use
+return
+
+
+;; --------------------------------
+;; Action when the Show Password button is pressed
+;; --------------------------------
+
+ShowOBSwebsocket:
+	Gui, Submit, NoHide
+	GuiControlGet, FieldOBSPassword
+	MsgBox,32,OBS websocket Password, %FieldOBSPassword%
 return
 
 
@@ -198,6 +226,17 @@ return
 
 
 ;; --------------------------------
+;; Action when the Show JWT button is pressed
+;; --------------------------------
+
+Showjwt:
+	Gui, Submit, NoHide
+	GuiControlGet, FieldSE
+	MsgBox,32,StreamElements JWT Token, %FieldSE%
+return
+
+
+;; --------------------------------
 ;; Action when the socketAPI button is pressed
 ;; --------------------------------
 
@@ -212,6 +251,17 @@ return
 
 GetsocketAPIHelp:
 	MsgBox,32,Streamlabs Connection Help, - Log in to your Streamlabs Dashboard`n- Click Settings from the left menu`n- Click the API Tokens tab`n- Copy the Your Socket API Token value`n- Paste the Socket API token in the box
+return
+
+
+;; --------------------------------
+;; Action when the Show socketAPI button is pressed
+;; --------------------------------
+
+ShowsocketAPI:
+	Gui, Submit, NoHide
+	GuiControlGet, FieldSL
+	MsgBox,32,Streamlabs socketAPI Token, %FieldSL%
 return
 
 
@@ -288,7 +338,7 @@ file := FileOpen("settings\streamlabs\socketAPIToken.txt", "w")
 file.write(FieldSL)
 file.close()
 
-MsgBox,,Save Settings, New settings saved!.
+MsgBox,,Save Settings, New settings saved
 GuiControl,Enable, ReloadButton
 GuiControl,Disable, SaveButton
 return
