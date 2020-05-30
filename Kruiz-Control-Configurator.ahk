@@ -14,7 +14,7 @@ SetBatchLines -1
 ;; --------------------------------
 
 vCheck := ComObjCreate("WinHttp.WinHttpRequest.5.1")
-vCheck.Open("GET","https://raw.githubusercontent.com/CrashKoeck/Kruiz-Control-Configurator/master/Kruiz-Control%20Configurator.ahkp")
+vCheck.Open("GET","https://raw.githubusercontent.com/CrashKoeck/Kruiz-Control-Configurator/master/Kruiz-Control%20Configurator.ahk")
 vCheck.Send()
 vCheckResponse := vCheck.ResponseText
 vCheckArray := StrSplit(vCheckResponse, """")
