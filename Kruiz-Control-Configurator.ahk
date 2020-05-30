@@ -1,7 +1,7 @@
 ﻿; Kruiz Control Configurator by CrashKoeck
 ; Crash@CrashKoeck.com
 ; Copyright 2020 CrashKoeck
-Version := "1.1.1"
+Version := "1.1.2"
 
 #SingleInstance Force
 #NoEnv
@@ -14,7 +14,7 @@ SetBatchLines -1
 ;; --------------------------------
 
 vCheck := ComObjCreate("WinHttp.WinHttpRequest.5.1")
-vCheck.Open("GET","https://raw.githubusercontent.com/CrashKoeck/Kruiz-Control-Configurator/master/Kruiz-Control%20Configurator.ahk")
+vCheck.Open("GET","https://raw.githubusercontent.com/CrashKoeck/Kruiz-Control-Configurator/master/Kruiz-Control%20Configurator.ahkp")
 vCheck.Send()
 vCheckResponse := vCheck.ResponseText
 vCheckArray := StrSplit(vCheckResponse, """")
@@ -68,13 +68,13 @@ if (Version < latestKCCVersion and A_Args[1] != "noupdate"){
 ;; --------------------------------
 
 vCheck := ComObjCreate("WinHttp.WinHttpRequest.5.1")
-vCheck.Open("GET","https://api.github.com/repos/Kruiser8/Kruiz-Control/releases/latest")
+vCheck.Open("GET","https://raw.githubusercontent.com/Kruiser8/Kruiz-Control/master/version.txt")
 vCheck.Send()
-vCheckResponse := vCheck.ResponseText
-vCheckArray := StrSplit(vCheckResponse, "tag_name")
-vCheckArray2 := StrSplit(vCheckArray[2], ",")
-vCheckArray3 := StrSplit(vCheckArray2[1], "v")
-latestKCVersion := StrReplace(vCheckArray3[2], """", "")
+if (vCheck.ResponseText = "404: Not Found"){
+	latestKCVersion := "Could not retrieve latest version data (Version data coming soon to Kruiz Control)"
+} else {
+	latestKCVersion := vCheck.ResponseText
+}
 
 
 ;; --------------------------------
