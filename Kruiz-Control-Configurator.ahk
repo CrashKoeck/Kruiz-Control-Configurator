@@ -1,7 +1,7 @@
 ﻿; Kruiz Control Configurator by CrashKoeck
 ; Crash@CrashKoeck.com
 ; Copyright 2020 CrashKoeck
-Version := "1.2.0"
+Version := "1.2.1"
 
 #SingleInstance Force
 #NoEnv
@@ -168,7 +168,7 @@ Gui Add, Tab3, x5 y145 w632 h451, Configuration|About
 	Gui Add, Edit, x320 y372 w304 h21 vFieldSLOBSAPI gSaveEnable +Password, %savedSLOBSAPI%
 	Gui Add, Button, x319 y397 w150 h21 gGetSLOBSAPI, Get SLOBS API Key
 	Gui Add, Button, x474 y397 w21 h21 gGetSLOBSAPIHelp, ?
-	Gui Add, Button, x500 y397 w125 h21 gShowSLOBSAPI, Show Password
+	Gui Add, Button, x500 y397 w125 h21 gShowSLOBSAPI, Show API Key
 
 	Gui Add, Text, x16 y433 w299 h23 +0x200 +Right, StreamElements JWT Token:
 	Gui Add, Edit, x320 y433 w304 h21 vFieldSE gSaveEnable +Password, %savedSE%
