@@ -19,7 +19,6 @@ vCheck.Send()
 vCheckResponse := vCheck.ResponseText
 vCheckArray := StrSplit(vCheckResponse, """")
 latestKCCVersion := vCheckArray[2]
-MsgBox, % latestKCCVersion
 
 
 ;; --------------------------------
