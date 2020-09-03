@@ -27,7 +27,7 @@
 - Make Kruiz Control Configurator able to edit triggers.txt, filetriggers.txt, and add new file triggers
 - Dropdown menus for all Kruiz Control actions
 - Option to run Kruiz Control within Kruiz Control Configurator
-- Option to check for and install updates
+- ~~Option to check for and install updates
 
 ***
 
