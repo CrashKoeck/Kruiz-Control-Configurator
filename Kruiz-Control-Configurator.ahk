@@ -1,7 +1,7 @@
 ﻿; Kruiz Control Configurator by CrashKoeck
 ; Crash@CrashKoeck.com
 ; Copyright 2020 CrashKoeck
-Version := "1.1.2"
+Version := "1.2.0"
 
 #SingleInstance Force
 #NoEnv
@@ -19,6 +19,7 @@ vCheck.Send()
 vCheckResponse := vCheck.ResponseText
 vCheckArray := StrSplit(vCheckResponse, """")
 latestKCCVersion := vCheckArray[2]
+MsgBox, % latestKCCVersion
 
 
 ;; --------------------------------
@@ -89,6 +90,7 @@ if (FileExist("version.txt")){
 		currentLocalKCVersion := readLocalVersion
 		if(readLocalVersion < latestKCVersion){
 			KCUpdateAvailable := "Kruiz Control Update Available`nCheck the About Tab"
+			latestKCVersion := % latestKCVersion . " <-- UPDATE AVAILABLE!"
 		}
 	}
 }
@@ -98,11 +100,12 @@ if (FileExist("version.txt")){
 ;; Load existing settings
 ;; --------------------------------
 
-FileReadLine, savedChannelPoints, settings\channelpoints\user.txt, 1
+FileReadLine, savedChannelPoints, settings\twitch\user.txt, 1
 FileReadLine, savedChat, settings\chat\user.txt, 1
 FileReadLine, savedOAUTH, settings\chat\oauth.txt, 1
 FileReadLine, savedOBSAddress, settings\obs\address.txt, 1
 FileReadLine, savedOBSPassword, settings\obs\password.txt, 1
+FileReadLine, savedSLOBSAPI, settings\slobs\token.txt, 1
 FileReadLine, savedSE, settings\streamelements\jwtToken.txt, 1
 FileReadLine, savedSL, settings\streamlabs\socketAPIToken.txt, 1
 
@@ -139,7 +142,7 @@ Gui Add, Button, x600 y10 w30 h30 gExitApp, X
 ;; TABS - Inner Dimensions = x6 y166 w628 h428
 ;; --------------------------------
 
-Gui Add, Tab3, x5 y145 w632 h451, Configuration|Trigger Creator|About
+Gui Add, Tab3, x5 y145 w632 h451, Configuration|About
 	
 	Gui Add, Text, x16 y176 w299 h21 +0x200 +Right, Channel to read Channel Points from: 
 	Gui Add, Edit, x320 y176 w304 h21 vFieldChannelPoints gSaveEnable, %savedChannelPoints%
@@ -153,39 +156,40 @@ Gui Add, Tab3, x5 y145 w632 h451, Configuration|Trigger Creator|About
 	Gui Add, Button, x474 y251 w21 h21 gGetOAUTHHelp, ?
 	Gui Add, Button, x500 y251 w125 h21 gShowOAUTH, Show Token
 
-	Gui Add, Text, x16 y301 w299 h23 +0x200 +Right, OBS Websocket Address:
-	Gui Add, Edit, x320 y301 w304 h21 vFieldOBSAddress gSaveEnable, %savedOBSAddress%
+	Gui Add, Text, x16 y285 w299 h23 +0x200 +Right, OBS Websocket Address:
+	Gui Add, Edit, x320 y285 w304 h21 vFieldOBSAddress gSaveEnable, %savedOBSAddress%
 
-	Gui Add, Text, x16 y326 w299 h23 +0x200 +Right, OBS Websocket Password:
-	Gui Add, Edit, x320 y326 w304 h21 vFieldOBSPassword gSaveEnable +Password, %savedOBSPassword%
-	Gui Add, Button, x319 y351 w150 h21 gGetOBSwebsocket, Get OBS websocket Plugin
-	Gui Add, Button, x474 y351 w21 h21 gGetOBSwebsocketHelp, ?
-	Gui Add, Button, x500 y351 w125 h21 gShowOBSwebsocket, Show Password
+	Gui Add, Text, x16 y310 w299 h23 +0x200 +Right, OBS Websocket Password:
+	Gui Add, Edit, x320 y310 w304 h21 vFieldOBSPassword gSaveEnable +Password, %savedOBSPassword%
+	Gui Add, Button, x319 y336 w150 h21 gGetOBSwebsocket, Get OBS websocket Plugin
+	Gui Add, Button, x474 y336 w21 h21 gGetOBSwebsocketHelp, ?
+	Gui Add, Button, x500 y336 w125 h21 gShowOBSwebsocket, Show Password
+	
+	Gui Add, Text, x16 y372 w299 h23 +0x200 +Right, SLOBS API Key:
+	Gui Add, Edit, x320 y372 w304 h21 vFieldSLOBSAPI gSaveEnable +Password, %savedSLOBSAPI%
+	Gui Add, Button, x319 y397 w150 h21 gGetSLOBSAPI, Get SLOBS API Key
+	Gui Add, Button, x474 y397 w21 h21 gGetSLOBSAPIHelp, ?
+	Gui Add, Button, x500 y397 w125 h21 gShowSLOBSAPI, Show Password
 
-	Gui Add, Text, x16 y401 w299 h23 +0x200 +Right, StreamElements JWT Token:
-	Gui Add, Edit, x320 y401 w304 h21 vFieldSE gSaveEnable +Password, %savedSE%
-	Gui Add, Button, x319 y426 w150 h21 gGetjwt, Get JWT Token
-	Gui Add, Button, x474 y426 w21 h21 gGetjwtHelp, ?
-	Gui Add, Button, x500 y426 w125 h21 gShowjwt, Show JWT Token
+	Gui Add, Text, x16 y433 w299 h23 +0x200 +Right, StreamElements JWT Token:
+	Gui Add, Edit, x320 y433 w304 h21 vFieldSE gSaveEnable +Password, %savedSE%
+	Gui Add, Button, x319 y458 w150 h21 gGetjwt, Get JWT Token
+	Gui Add, Button, x474 y458 w21 h21 gGetjwtHelp, ?
+	Gui Add, Button, x500 y458 w125 h21 gShowjwt, Show JWT Token
 
-	Gui Add, Text, x16 y476 w299 h23 +0x200 +Right, Streamlabs socketAPI Token:
-	Gui Add, Edit, x320 y476 w304 h21 vFieldSL gSaveEnable +Password, %savedSL%
-	Gui Add, Button, x319 y501 w150 h21 gGetsocketAPI, Get socketAPI Token
-	Gui Add, Button, x474 y501 w21 h21 gGetsocketAPIHelp, ?
-	Gui Add, Button, x500 y501 w125 h21 gShowsocketAPI, Show socketAPI Token
+	Gui Add, Text, x16 y494 w299 h23 +0x200 +Right, Streamlabs socketAPI Token:
+	Gui Add, Edit, x320 y494 w304 h21 vFieldSL gSaveEnable +Password, %savedSL%
+	Gui Add, Button, x319 y519 w150 h21 gGetsocketAPI, Get socketAPI Token
+	Gui Add, Button, x474 y519 w21 h21 gGetsocketAPIHelp, ?
+	Gui Add, Button, x500 y519 w125 h21 gShowsocketAPI, Show socketAPI Token
 
 	Gui Add, Button, x100 y554 w140 h30 gResetDefaults, Reset Defaults
-	Gui Add, Button, x250 y554 w140 h30 vReloadButton gReloadSettings +Disabled, Reload Previous Settings
+	Gui Add, Button, x250 y554 w140 h30 vReloadButton gReloadSettings +Disabled, Reload Saved Settings
 	Gui Add, Button, x400 y554 w140 h30 vSaveButton gSaveSettings +Disabled, Save Settings
 
 Gui Tab, 2
 
-	Gui Add, Text, x10 y356 w620 h23 +0x200 +Center, Coming Soon
-
-Gui Tab, 3
-
 	Gui Add, Link, x16 y176 w608 h418, Kruiz Control Configurator Version: %Version%`nCreated by CrashKoeck`n<a href="https://crashkoeck.com">CrashKoeck.com</a>`n<a href="https://raw.githubusercontent.com/CrashKoeck/Kruiz-Control-Configurator/master/LICENSE">License</a>`n`nCurrent Local Version of Kruiz Control: %currentLocalKCVersion%`nLatest Version of Kruiz Control on <A href="https://github.com/Kruiser8/Kruiz-Control/releases">GitHub</a>: %latestKCVersion%`n`nKruiz Control created by Kruiser8`n`nIf you are having issues with this app, please join the <a href="https://discord.gg/zyS2jbJ">CrashPad Discord</a> for support`n`n- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -`n`n<a href="https://github.com/Kruiser8/Kruiz-Control/blob/master/js/Documentation.md#kruiz-control-documentation">Kruiz Control Documentation</a>`n`n<a href="https://discord.gg/wU3ZK3Q">Kruiz Control Support Discord</a>`n`n<a href="https://twitter.com/kruiser8">Kruiser8 on Twitter</a>`n`n<a href="https://twitch.tv/kruiser8">Kruiser8 on Twitch</a>`n`n- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -`n`n<a href="https://github.com/crashkoeck">CrashKoeck on GitHub</a>`n`n<a href="https://twitter.com/CrashKoeck">CrashKoeck on Twitter</a>`n`n<a href="https://twitch.tv/CrashKoeck">CrashKoeck on Twitch</a>
-	
 
 Gui Tab
 
@@ -261,6 +265,35 @@ return
 
 
 ;; --------------------------------
+;; Action when the OBS websocket button is pressed
+;; --------------------------------
+
+GetSLOBSAPI:
+	Run, https://github.com/Kruiser8/Kruiz-Control/blob/master/settings/Settings.md#slobs
+return
+
+
+;; --------------------------------
+;; Action when the SLOBS API ? button is pressed
+;; --------------------------------
+
+GetSLOBSAPIHelp:
+	MsgBox,64,SLOBS API Key Info, The SLOBS API Key allows you to connect Kruiz Control to and communicate with SLOBS.
+return
+
+
+;; --------------------------------
+;; Action when the Show Password button is pressed
+;; --------------------------------
+
+ShowSLOBSAPI:
+	Gui, Submit, NoHide
+	GuiControlGet, FieldSLOBSAPI
+	MsgBox,32,SLOBS API Key, %FieldSLOBSAPI%
+return
+
+
+;; --------------------------------
 ;; Action when the jwt button is pressed
 ;; --------------------------------
 
@@ -323,15 +356,51 @@ return
 ;; --------------------------------
 
 ResetDefaults:
-	GuiControl,, FieldChannelPoints, username
-	GuiControl,, FieldChat, username
-	GuiControl,, FieldOAUTH, oauth:token
-	GuiControl,, FieldOBSAddress, localhost:4444
-	GuiControl,, FieldOBSPassword, password
-	GuiControl,, FieldSE, jwtToken
-	GuiControl,, FieldSL, socketAPIToken
+	Progress, w400, Working..., Loading data from GitHub, Resetting Defaults
+	DefChannelPoints := ComObjCreate("WinHttp.WinHttpRequest.5.1")
+	DefChannelPoints.Open("GET","https://raw.githubusercontent.com/Kruiser8/Kruiz-Control/master/settings/twitch/user.txt")
+	DefChannelPoints.Send()
+	GuiControl,, FieldChannelPoints, % DefChannelPoints.ResponseText
+	Progress, 12.5
+	DefChat := ComObjCreate("WinHttp.WinHttpRequest.5.1")
+	DefChat.Open("GET","https://raw.githubusercontent.com/Kruiser8/Kruiz-Control/master/settings/chat/user.txt")
+	DefChat.Send()
+	GuiControl,, FieldChat, % DefChat.ResponseText
+	Progress, 25
+	DefOAUTH := ComObjCreate("WinHttp.WinHttpRequest.5.1")
+	DefOAUTH.Open("GET","https://raw.githubusercontent.com/Kruiser8/Kruiz-Control/master/settings/chat/oauth.txt")
+	DefOAUTH.Send()
+	GuiControl,, FieldOAUTH, % DefOAUTH.ResponseText
+	Progress, 37.5
+	DefOBSAddress := ComObjCreate("WinHttp.WinHttpRequest.5.1")
+	DefOBSAddress.Open("GET","https://raw.githubusercontent.com/Kruiser8/Kruiz-Control/master/settings/obs/address.txt")
+	DefOBSAddress.Send()
+	GuiControl,, FieldOBSAddress, % DefOBSAddress.ResponseText
+	Progress, 50
+	DefOBSPassword := ComObjCreate("WinHttp.WinHttpRequest.5.1")
+	DefOBSPassword.Open("GET","https://raw.githubusercontent.com/Kruiser8/Kruiz-Control/master/settings/obs/password.txt")
+	DefOBSPassword.Send()
+	GuiControl,, FieldOBSPassword, % DefOBSPassword.ResponseText
+	Progress, 62.5
+	DefSLOBSAPI := ComObjCreate("WinHttp.WinHttpRequest.5.1")
+	DefSLOBSAPI.Open("GET","https://raw.githubusercontent.com/Kruiser8/Kruiz-Control/master/settings/slobs/token.txt")
+	DefSLOBSAPI.Send()
+	GuiControl,, FieldSLOBSAPI, % DefSLOBSAPI.ResponseText
+	Progress, 75
+	DefjwtToken := ComObjCreate("WinHttp.WinHttpRequest.5.1")
+	DefjwtToken.Open("GET","https://raw.githubusercontent.com/Kruiser8/Kruiz-Control/master/settings/streamelements/jwtToken.txt")
+	DefjwtToken.Send()
+	GuiControl,, FieldSE, % DefjwtToken.ResponseText
+	Progress, 87.5
+	DefsocketAPIToken := ComObjCreate("WinHttp.WinHttpRequest.5.1")
+	DefsocketAPIToken.Open("GET","https://raw.githubusercontent.com/Kruiser8/Kruiz-Control/master/settings/streamlabs/socketAPIToken.txt")
+	DefsocketAPIToken.Send()
+	GuiControl,, FieldSL, % DefsocketAPIToken.ResponseText
+	Progress, 100, Complete
 	GuiControl,Enable, ReloadButton
 	GuiControl,Enable, SaveButton
+	Sleep, 2000
+	Progress, Off
 return
 
 
@@ -345,6 +414,7 @@ ReloadSettings:
 	GuiControl,, FieldOAUTH, %savedOAUTH%
 	GuiControl,, FieldOBSAddress, %savedOBSAddress%
 	GuiControl,, FieldOBSPassword, %savedOBSPassword%
+	GuiControl,, FieldSLOBSAPI, %savedSLOBSAPI%
 	GuiControl,, FieldSE, %savedSE%
 	GuiControl,, FieldSL, %savedSL%
 	GuiControl,Disabled, ReloadButton
@@ -366,10 +436,11 @@ GuiControlGet, FieldChat
 GuiControlGet, FieldOAUTH
 GuiControlGet, FieldOBSAddress
 GuiControlGet, FieldOBSPassword
+GuiControlGet, FieldSLOBSAPI
 GuiControlGet, FieldSE
 GuiControlGet, FieldSL
 
-file := FileOpen("settings\channelpoints\user.txt", "w")
+file := FileOpen("settings\twitch\user.txt", "w")
 file.write(FieldChannelPoints)
 file.close()
 file := FileOpen("settings\chat\user.txt", "w")
@@ -383,6 +454,9 @@ file.write(FieldOBSAddress)
 file.close()
 file := FileOpen("settings\obs\password.txt", "w")
 file.write(FieldOBSPassword)
+file.close()
+file := FileOpen("settings\slobs\token.txt", "w")
+file.write(FieldSLOBSAPI)
 file.close()
 file := FileOpen("settings\streamelements\jwtToken.txt", "w")
 file.write(FieldSE)
