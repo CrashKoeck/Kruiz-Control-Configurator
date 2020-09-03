@@ -27,6 +27,7 @@ latestKCCVersion := vCheckArray[2]
 
 if (FileExist("Kruiz-Control-Configurator-OLD.exe")){ ;Clean up old installation files
 	FileDelete, Kruiz-Control-Configurator-OLD.exe
+	Run, https://github.com/CrashKoeck/Kruiz-Control-Configurator/releases
 }
 
 if (Version < latestKCCVersion and A_Args[1] != "noupdate"){
