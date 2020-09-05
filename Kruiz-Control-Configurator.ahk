@@ -1,7 +1,7 @@
 ﻿; Kruiz Control Configurator by CrashKoeck
 ; Crash@CrashKoeck.com
 ; Copyright 2020 CrashKoeck
-Version := "1.3.0"
+Version := "1.3.1"
 
 #SingleInstance Force
 #NoEnv
@@ -267,6 +267,11 @@ UpdateKC:
 			FileRemoveDir,% A_LoopFileDir . "\triggers",1
 			FileMoveDir,% A_LoopFileFullPath, % A_LoopFileDir . "\triggers"
 		}
+	}
+	if (FileExist("settings\channelpoints\user.txt")){
+		FileCreateDir, settings\twitch
+		FileMove, settings\channelpoints\user.txt, settings\twitch\user.txt, 1
+		FileRemoveDir, settings\channelpoints, 1
 	}
 	Progress, 80, , Backups restored`, cleaning up
 	if (FileExist("KCUpdate.zip")){
@@ -537,6 +542,12 @@ GuiControlGet, FieldSLOBSAPI
 GuiControlGet, FieldSE
 GuiControlGet, FieldSL
 
+FileCreateDir, settings\twitch
+FileCreateDir, settings\chat
+FileCreateDir, settings\obs
+FileCreateDir, settings\slobs
+FileCreateDir, settings\streamelements
+FileCreateDir, settings\streamlabs
 file := FileOpen("settings\twitch\user.txt", "w")
 file.write(FieldChannelPoints)
 file.close()
