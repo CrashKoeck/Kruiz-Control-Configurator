@@ -210,84 +210,88 @@ Return
 
 UpdateKC:
 	
-	Progress, w400, , Downloading data from GitHub, Updating to Kruiz Control %latestKCVersion%
-	KCURL = https://github.com/Kruiser8/Kruiz-Control/archive/master.zip
-	Progress, 5
-	UrlDownloadToFile, %KCURL%, KCUpdate.zip
-	Progress, 15, , Backing up user data and deleting old files
-	Loop, Files, %A_ScriptDir%\*.*, F
-	{
-		if(A_LoopFileName != "Kruiz-Control-Configurator.exe" and A_LoopFileName != "KCUpdate.zip"){
-			if(A_LoopFileName != "triggers.txt" and A_LoopFileName != "fileTriggers.txt"){
-				FileDelete,% A_LoopFileDir . "\" . A_LoopFileName,1
-			} else {
-				FileMove,% A_LoopFileFullPath, % A_LoopFileDir . "\KCBKP-" . A_LoopFileName,1
+	if(!FileExist("version.txt") or !FileExist("index.html") or !FileExist("triggers.txt")){
+		MsgBox,16,, It appears that you are either not running the Kruiz Control Configurator within the Kruiz Control directory or you are running an old version of Kruiz Control that doesn't work with the auto-updater
+	} else {
+		Progress, w400, , Downloading data from GitHub, Updating to Kruiz Control %latestKCVersion%
+		KCURL = https://github.com/Kruiser8/Kruiz-Control/archive/master.zip
+		Progress, 5
+		UrlDownloadToFile, %KCURL%, KCUpdate.zip
+		Progress, 15, , Backing up user data and deleting old files
+		Loop, Files, %A_ScriptDir%\*.*, F
+		{
+			if(A_LoopFileName != "Kruiz-Control-Configurator.exe" and A_LoopFileName != "KCUpdate.zip"){
+				if(A_LoopFileName != "triggers.txt" and A_LoopFileName != "fileTriggers.txt"){
+					FileDelete,% A_LoopFileDir . "\" . A_LoopFileName,1
+				} else {
+					FileMove,% A_LoopFileFullPath, % A_LoopFileDir . "\KCBKP-" . A_LoopFileName,1
+				}
 			}
 		}
-	}
-	Loop, Files, %A_ScriptDir%\*, D
-	{
-		if(A_LoopFileName != "Kruiz-Control-Configurator.exe"){
-			if(A_LoopFileName != "settings" and A_LoopFileName != "sounds" and A_LoopFileName != "triggers"){
-				FileRemoveDir,% A_LoopFileDir . "\" . A_LoopFileName,1
-			} else {
-				FileMoveDir,% A_LoopFileFullPath, % A_LoopFileDir . "\KCBKP-" . A_LoopFileName
+		Loop, Files, %A_ScriptDir%\*, D
+		{
+			if(A_LoopFileName != "Kruiz-Control-Configurator.exe"){
+				if(A_LoopFileName != "settings" and A_LoopFileName != "sounds" and A_LoopFileName != "triggers"){
+					FileRemoveDir,% A_LoopFileDir . "\" . A_LoopFileName,1
+				} else {
+					FileMoveDir,% A_LoopFileFullPath, % A_LoopFileDir . "\KCBKP-" . A_LoopFileName
+				}
 			}
 		}
-	}
-	Progress, 30, , Extracting downloaded files
-	RunWait PowerShell.exe -Command "Expand-Archive -LiteralPath '%A_ScriptDir%\KCUpdate.zip' -DestinationPath '%A_ScriptDir%' -Force",, Hide
-	Progress, 45, , Moving extracted files
-	Loop, Files, %A_ScriptDir%\Kruiz-Control-master\*.*, F
-	{
-		FileMove,% A_LoopFileFullPath, % A_ScriptDir . "\"  . A_LoopFileName,1
-	}
-	Loop, Files, %A_ScriptDir%\Kruiz-Control-master\*, D
-	{
-		FileMoveDir,% A_LoopFileFullPath, % A_ScriptDir . "\"  . A_LoopFileName
-	}
-	Progress, 60, , Restoring backup files
-	Loop, Files, %A_ScriptDir%\*.*, F
-	{
-		if(A_LoopFileName = "KCBKP-triggers.txt"){
-			FileDelete,% A_LoopFileDir . "\triggers.txt",1
-			FileMove,% A_LoopFileFullPath, % A_LoopFileDir . "\triggers.txt",1
-		} else if(A_LoopFileName = "KCBKP-fileTriggers.txt"){
-			FileDelete,% A_LoopFileDir . "\fileTriggers.txt",1
-			FileMove,% A_LoopFileFullPath, % A_LoopFileDir . "\fileTriggers.txt",1
+		Progress, 30, , Extracting downloaded files
+		RunWait PowerShell.exe -Command "Expand-Archive -LiteralPath '%A_ScriptDir%\KCUpdate.zip' -DestinationPath '%A_ScriptDir%' -Force",, Hide
+		Progress, 45, , Moving extracted files
+		Loop, Files, %A_ScriptDir%\Kruiz-Control-master\*.*, F
+		{
+			FileMove,% A_LoopFileFullPath, % A_ScriptDir . "\"  . A_LoopFileName,1
 		}
-	}
-	Loop, Files, %A_ScriptDir%\*, D
-	{
-		if(A_LoopFileName = "KCBKP-settings"){
-			FileRemoveDir,% A_LoopFileDir . "\settings",1
-			FileMoveDir,% A_LoopFileFullPath, % A_LoopFileDir . "\settings"
-		} else if(A_LoopFileName = "KCBKP-sounds"){
-			FileRemoveDir,% A_LoopFileDir . "\sounds",1
-			FileMoveDir,% A_LoopFileFullPath, % A_LoopFileDir . "\sounds"
-		} else if(A_LoopFileName = "KCBKP-triggers"){
-			FileRemoveDir,% A_LoopFileDir . "\triggers",1
-			FileMoveDir,% A_LoopFileFullPath, % A_LoopFileDir . "\triggers"
+		Loop, Files, %A_ScriptDir%\Kruiz-Control-master\*, D
+		{
+			FileMoveDir,% A_LoopFileFullPath, % A_ScriptDir . "\"  . A_LoopFileName
 		}
+		Progress, 60, , Restoring backup files
+		Loop, Files, %A_ScriptDir%\*.*, F
+		{
+			if(A_LoopFileName = "KCBKP-triggers.txt"){
+				FileDelete,% A_LoopFileDir . "\triggers.txt",1
+				FileMove,% A_LoopFileFullPath, % A_LoopFileDir . "\triggers.txt",1
+			} else if(A_LoopFileName = "KCBKP-fileTriggers.txt"){
+				FileDelete,% A_LoopFileDir . "\fileTriggers.txt",1
+				FileMove,% A_LoopFileFullPath, % A_LoopFileDir . "\fileTriggers.txt",1
+			}
+		}
+		Loop, Files, %A_ScriptDir%\*, D
+		{
+			if(A_LoopFileName = "KCBKP-settings"){
+				FileRemoveDir,% A_LoopFileDir . "\settings",1
+				FileMoveDir,% A_LoopFileFullPath, % A_LoopFileDir . "\settings"
+			} else if(A_LoopFileName = "KCBKP-sounds"){
+				FileRemoveDir,% A_LoopFileDir . "\sounds",1
+				FileMoveDir,% A_LoopFileFullPath, % A_LoopFileDir . "\sounds"
+			} else if(A_LoopFileName = "KCBKP-triggers"){
+				FileRemoveDir,% A_LoopFileDir . "\triggers",1
+				FileMoveDir,% A_LoopFileFullPath, % A_LoopFileDir . "\triggers"
+			}
+		}
+		if (FileExist("settings\channelpoints\user.txt")){
+			FileCreateDir, settings\twitch
+			FileMove, settings\channelpoints\user.txt, settings\twitch\user.txt, 1
+			FileRemoveDir, settings\channelpoints, 1
+		}
+		Progress, 80, , Backups restored`, cleaning up
+		if (FileExist("KCUpdate.zip")){
+			FileDelete, KCUpdate.zip
+		}
+		if (InStr(FileExist("Kruiz-Control-master"), "D")){
+			FileRemoveDir, Kruiz-Control-master, 1
+		}
+		Sleep, 1000
+		Progress, 100, , Update Complete!
+		KCUpdateAvailable := ""
+		currentLocalKCVersion := latestKCVersion
+		Sleep, 3000
+		Progress, Off
 	}
-	if (FileExist("settings\channelpoints\user.txt")){
-		FileCreateDir, settings\twitch
-		FileMove, settings\channelpoints\user.txt, settings\twitch\user.txt, 1
-		FileRemoveDir, settings\channelpoints, 1
-	}
-	Progress, 80, , Backups restored`, cleaning up
-	if (FileExist("KCUpdate.zip")){
-		FileDelete, KCUpdate.zip
-	}
-	if (InStr(FileExist("Kruiz-Control-master"), "D")){
-		FileRemoveDir, Kruiz-Control-master, 1
-	}
-	Sleep, 1000
-	Progress, 100, , Update Complete!
-	KCUpdateAvailable := ""
-	currentLocalKCVersion := latestKCVersion
-	Sleep, 3000
-	Progress, Off
 return
 
 
