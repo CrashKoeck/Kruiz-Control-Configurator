@@ -1,12 +1,13 @@
 ﻿; Kruiz Control Configurator by CrashKoeck
 ; Crash@CrashKoeck.com
 ; Copyright 2020 CrashKoeck
-Version := "1.3.1"
+Version := "1.3.2"
 
 #SingleInstance Force
 #NoEnv
 SetWorkingDir %A_ScriptDir%
 SetBatchLines -1
+UnsavedWork := 0
 
 
 ;; --------------------------------
@@ -194,7 +195,8 @@ Gui Add, Tab3, x5 y145 w632 h451, Configuration|About
 
 Gui Tab, 2
 
-	Gui Add, Link, x16 y176 w608 h418, Kruiz Control Configurator Version: %Version%`nCreated by CrashKoeck`n<a href="https://crashkoeck.com">CrashKoeck.com</a>`n<a href="https://raw.githubusercontent.com/CrashKoeck/Kruiz-Control-Configurator/master/LICENSE">License</a>`n`nCurrent Local Version of Kruiz Control: %currentLocalKCVersion%`nLatest Version of Kruiz Control on <A href="https://github.com/Kruiser8/Kruiz-Control/releases">GitHub</a>: %latestKCVersion%`n`nKruiz Control created by Kruiser8`n`nIf you are having issues with this app, please join the <a href="https://discord.gg/zyS2jbJ">CrashPad Discord</a> for support`n`n- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -`n`n<a href="https://github.com/Kruiser8/Kruiz-Control/blob/master/js/Documentation.md#kruiz-control-documentation">Kruiz Control Documentation</a>`n`n<a href="https://discord.gg/wU3ZK3Q">Kruiz Control Support Discord</a>`n`n<a href="https://twitter.com/kruiser8">Kruiser8 on Twitter</a>`n`n<a href="https://twitch.tv/kruiser8">Kruiser8 on Twitch</a>`n`n- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -`n`n<a href="https://github.com/crashkoeck">CrashKoeck on GitHub</a>`n`n<a href="https://twitter.com/CrashKoeck">CrashKoeck on Twitter</a>`n`n<a href="https://twitch.tv/CrashKoeck">CrashKoeck on Twitch</a>
+	Gui Add, Link, x16 y176 w450 h418, Kruiz Control Configurator Version: %Version%`nCreated by CrashKoeck`n<a href="https://crashkoeck.com">CrashKoeck.com</a>`n<a href="https://raw.githubusercontent.com/CrashKoeck/Kruiz-Control-Configurator/master/LICENSE">License</a>`n`nCurrent Local Version of Kruiz Control: %currentLocalKCVersion%`nLatest Version of Kruiz Control on <A href="https://github.com/Kruiser8/Kruiz-Control/releases">GitHub</a>: %latestKCVersion%`n`nKruiz Control created by Kruiser8`n`nIf you are having issues with this app, please join the <a href="https://discord.gg/zyS2jbJ">CrashPad Discord</a> for support`n`n- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -`n`n<a href="https://github.com/Kruiser8/Kruiz-Control/blob/master/js/Documentation.md#kruiz-control-documentation">Kruiz Control Documentation</a>`n`n<a href="https://discord.gg/wU3ZK3Q">Kruiz Control Support Discord</a>`n`n<a href="https://twitter.com/kruiser8">Kruiser8 on Twitter</a>`n`n<a href="https://twitch.tv/kruiser8">Kruiser8 on Twitch</a>`n`n- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -`n`n<a href="https://github.com/crashkoeck">CrashKoeck on GitHub</a>`n`n<a href="https://twitter.com/CrashKoeck">CrashKoeck on Twitter</a>`n`n<a href="https://twitch.tv/CrashKoeck">CrashKoeck on Twitch</a>
+	Gui Add, Button, x485 y176 w140 h30 vReinstallButton gReinstallKC, Reinstall Kruiz Control
 
 Gui Tab
 
@@ -290,11 +292,23 @@ return
 
 
 ;; --------------------------------
+;; Reinstall Kruiz Control
+;; --------------------------------
+
+ReinstallKC:
+	Msgbox 68, Reinstall Kruiz Control, Are you sure you want to reinstall the latest version of Kruiz Control? Your settings and triggers will be preserved
+		IfMsgBox Yes
+			Gosub, UpdateKC
+return
+
+
+;; --------------------------------
 ;; Enable the Save button on change
 ;; --------------------------------
 
 SaveEnable:
 	GuiControl,Enable, SaveButton
+	UnsavedWork := 1
 return
 
 
@@ -501,6 +515,7 @@ ResetDefaults:
 	Progress, 100, Complete
 	GuiControl,Enable, ReloadButton
 	GuiControl,Enable, SaveButton
+	UnsavedWork := 1
 	Sleep, 2000
 	Progress, Off
 return
@@ -521,6 +536,7 @@ ReloadSettings:
 	GuiControl,, FieldSL, %savedSL%
 	GuiControl,Disabled, ReloadButton
 	GuiControl,Enable, SaveButton
+	UnsavedWork := 1
 return
 
 
@@ -576,6 +592,7 @@ file.close()
 MsgBox,,Save Settings, New settings saved
 GuiControl,Enable, ReloadButton
 GuiControl,Disable, SaveButton
+UnsavedWork := 0
 return
 
 
@@ -584,9 +601,11 @@ return
 ;; --------------------------------
 
 ExitApp:
-Msgbox 52, Exit application,Are you sure you want to exit?`nUnsaved changes will be lost
-IfMsgBox No
-	Return
+if(UnsavedWork){
+	Msgbox 52, Exit application,Are you sure you want to exit?`nUnsaved changes will be lost
+	IfMsgBox No
+		Return
+}
 ExitApp
 return
 
