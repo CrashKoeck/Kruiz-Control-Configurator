@@ -1,7 +1,7 @@
 ﻿; Kruiz Control Configurator by CrashKoeck
 ; Crash@CrashKoeck.com
-; Copyright 2020 CrashKoeck
-Version := "1.4.0"
+; Copyright 2021 CrashKoeck
+Version := "1.5.0"
 
 #SingleInstance Force
 #NoEnv
@@ -99,14 +99,15 @@ KUpdateAvailable := ""
 if (FileExist("version.txt")){
 	FileReadLine, readLocalVersion, version.txt, 1
 	if(readLocalVersion != ""){
-		currentLocalKCVersion := readLocalVersion
-		if(readLocalVersion < latestKCVersion){
+		currentLocalKCVersion := SubStr(readLocalVersion, 2)
+		currentRemoteKCVersion := SubStr(latestKCVersion, 2)
+		lines := StrSplit(currentRemoteKCVersion, "`n")
+		currentRemoteKCVersion := lines[1]
+		if(currentLocalKCVersion < currentRemoteKCVersion){
 			KCUpdateAvailable := "Kruiz Control Update Available`nCheck the About Tab"
-			Msgbox 68, Kruiz Control Update, An update is available for Kruiz Control. Would you like to download it now?`n`nCurrent Version: %readLocalVersion%`nLatest Version: %latestKCVersion%
+			Msgbox 68, Kruiz Control Update, An update is available for Kruiz Control. Would you like to download it now?`n`nCurrent Version: %currentLocalKCVersion%`nLatest Version: %currentRemoteKCVersion%
 				IfMsgBox Yes
 					Gosub, UpdateKC
-				IfMsgBox No
-					latestKCVersion := % latestKCVersion . " <-- UPDATE AVAILABLE!"
 		}
 	}
 }
@@ -201,11 +202,11 @@ Gui Add, Tab3, x5 y145 w632 h551 section, Configuration|About
 	Gui Add, Button, x+5 yp w21 hp gGetsocketAPIHelp, ?
 	Gui Add, Button, x+5 yp w125 hp gShowsocketAPI, Show socketAPI Token
 	
-	Gui Add, Text, xs+10 y+15 w299 hp +0x200 +Right, ResponsiveVoice Key:
-	Gui Add, Edit, x+5 yp w304 hp vFieldRV gSaveEnable +Password, %savedRV%
-	Gui Add, Button, x318 y+5 w150 hp gGetResponsiveVoice, Get ResponsiveVoice Key
-	Gui Add, Button, x+5 yp w21 hp gGetResponsiveVoiceHelp, ?
-	Gui Add, Button, x+5 yp w125 hp gShowResponsiveVoice, Show RV Key
+	;Gui Add, Text, xs+10 y+15 w299 hp +0x200 +Right, ResponsiveVoice Key:
+	;Gui Add, Edit, x+5 yp w304 hp vFieldRV gSaveEnable +Password, %savedRV%
+	;Gui Add, Button, x318 y+5 w150 hp gGetResponsiveVoice, Get ResponsiveVoice Key
+	;Gui Add, Button, x+5 yp w21 hp gGetResponsiveVoiceHelp, ?
+	;Gui Add, Button, x+5 yp w125 hp gShowResponsiveVoice, Show RV Key
 
 	Gui Add, Button, x100 y+15 w140 h30 gResetDefaults, Reset Defaults
 	Gui Add, Button, x+10 yp wp hp vReloadButton gReloadSettings +Disabled, Reload Saved Settings
