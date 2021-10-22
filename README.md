@@ -2,7 +2,7 @@
 
 <p align="center">Kruiz Control Configurator is a simple frontend for <a href="https://github.com/Kruiser8/Kruiz-Control">Kruiz Control</a> which allows easy setting and updating of settings files.</p>
 
-<p align="center"><img src="https://user-images.githubusercontent.com/51434502/94835020-f9d72800-03c5-11eb-9675-4b52c92201c0.png"></p>
+<p align="center"><img src="https://user-images.githubusercontent.com/51434502/138391372-78bf4bf2-7422-4a87-bb8f-83a3dea338ab.png"></p>
 
 <p align="center"><i><b>
   Crash on the interwebs<br>
@@ -24,9 +24,6 @@
 ***
 
 ## Future Plans
-- Make Kruiz Control Configurator able to edit triggers.txt, filetriggers.txt, and add new file triggers
-- Dropdown menus for all Kruiz Control actions
-- Option to run Kruiz Control within Kruiz Control Configurator
 - ~~Option to check for and install updates~~
 
 ***
